@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ECommerceMVC.Data;
+using static System.Net.WebRequestMethods;
 
 namespace ECommerceMVC.Controllers
 {
@@ -27,6 +28,7 @@ namespace ECommerceMVC.Controllers
 
         // GET: HangHoas/Details/5
         public async Task<IActionResult> Details(int? id)
+            
         {
             if (id == null)
             {
