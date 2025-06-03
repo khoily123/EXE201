@@ -2,7 +2,57 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Thêm CSS trực tiếp hoặc đưa vào file site.css -->
+<style>
+    .img-equal {
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .hover-zoom {
+        transition: transform 0.3s ease;
+    }
+
+        .hover-zoom:hover {
+            transform: scale(1.05);
+            z-index: 2;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-primary fw-bold">Nội Thất Hiện Đại & Sang Trọng</h1>
+        <p class="lead">Mang đến giải pháp thiết kế nội thất hoàn hảo cho không gian sống và làm việc của bạn.</p>
+        <a href="/HangHoa/Index" class="btn btn-primary btn-lg mt-3">Khám Phá Sản Phẩm</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 hover-zoom">
+                <img src="/Hinh/Others/anhPhongKhach.jpg" class="card-img-top img-equal" alt="Phòng khách hiện đại">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Phòng Khách</h5>
+                    <p class="card-text">Bộ sofa, kệ tivi, bàn trà – phong cách hiện đại, tiện nghi.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 hover-zoom">
+                <img src="/Hinh/Others/anhPhongNgu.jpg" class="card-img-top img-equal" alt="Phòng ngủ ấm cúng">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Phòng Ngủ</h5>
+                    <p class="card-text">Giường ngủ, tủ áo, bàn trang điểm – thiết kế hài hòa, ấm áp.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 hover-zoom">
+                <img src="/Hinh/Others/anhPhongBep.jpg" class="card-img-top img-equal" alt="Phòng bếp tiện nghi">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Phòng Bếp</h5>
+                    <p class="card-text">Tủ bếp thông minh, bàn ăn hiện đại – nâng tầm không gian bếp.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

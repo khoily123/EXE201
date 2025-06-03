@@ -1,0 +1,89 @@
+﻿@model ECommerceMVC.Data.KhachHang
+@{
+    ViewData["Title"] = "Hồ sơ cá nhân";
+}
+
+<style>
+    .profile-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        padding: 30px;
+        transition: all 0.3s ease;
+    }
+
+        .profile-card:hover {
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+    .profile-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: green;
+        margin-bottom: 20px;
+        border-bottom: 2px solid groove;
+        padding-bottom: 10px;
+    }
+
+    .profile-table th {
+        width: 40%;
+        background-color: #f8f9fa;
+    }
+
+    .profile-table td {
+        background-color: #ffffff;
+    }
+
+    .profile-image {
+        width: 100%;
+        border-radius: 15px;
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 profile-card">
+            <div class="row">
+                @* <div class="col-md-4 text-center mb-3 mb-md-0"> *@
+                @*     <img src="~/Hinh/KhachHang/@(Model.Hinh ?? "default.jpg")" class="profile-image" alt="Ảnh đại diện"> *@
+                @* </div> *@
+                <div class="col-md-8">
+                    <h2 class="profile-title">Hồ sơ cá nhân</h2>
+                    <table class="table table-bordered profile-table">
+                        <tr>
+                            <th>Mã khách hàng</th>
+                            <td>@Model.MaKh</td>
+                        </tr>
+                        <tr>
+                            <th>Họ tên</th>
+                            <td>@Model.HoTen</td>
+                        </tr>
+                        <tr>
+                            <th>Ngày sinh</th>
+                            <td>@Model.NgaySinh.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>@Model.Email</td>
+                        </tr>
+                        <tr>
+                            <th>Điện thoại</th>
+                            <td>@Model.DienThoai</td>
+                        </tr>
+                        <tr>
+                            <th>Địa chỉ</th>
+                            <td>@Model.DiaChi</td>
+                        </tr>
+                        <tr>
+                            <th>Trạng thái</th>
+                            <td>@(Model.HieuLuc ? "Kích hoạt" : "Chưa kích hoạt")</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <a asp-action="UpdateProfile" class="btn btn-outline-primary mt-3">Chỉnh sửa hồ sơ</a>
+        </div>
+    </div>
+</div>

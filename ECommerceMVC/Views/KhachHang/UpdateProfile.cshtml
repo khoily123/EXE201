@@ -1,0 +1,47 @@
+﻿@model ECommerceMVC.ViewModels.EditProfileVM
+
+@{
+    ViewData["Title"] = "Cập nhật hồ sơ";
+}
+
+<div class="container mt-5">
+    <h2 class="text-primary mb-4">Cập nhật hồ sơ</h2>
+
+    <form asp-action="UpdateProfile" method="post" class="needs-validation" novalidate>
+        <div class="row mb-3">
+            <label asp-for="HoTen" class="form-label">Họ tên</label>
+            <input asp-for="HoTen" class="form-control" />
+            <span asp-validation-for="HoTen" class="text-danger"></span>
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="NgaySinh" class="form-label">Ngày sinh</label>
+            <input asp-for="NgaySinh" class="form-control" type="date" />
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="DienThoai" class="form-label">Điện thoại</label>
+            <input asp-for="DienThoai" class="form-control" />
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="DiaChi" class="form-label">Địa chỉ</label>
+            <input asp-for="DiaChi" class="form-control" />
+        </div>
+
+        <input type="hidden" asp-for="MaKh" />
+
+        <button type="submit" class="btn btn-success">Lưu</button>
+        <a asp-action="Profile" class="btn btn-secondary ms-2">Quay lại</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
