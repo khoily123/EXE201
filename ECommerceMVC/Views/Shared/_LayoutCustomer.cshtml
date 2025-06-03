@@ -41,46 +41,70 @@
 			<div class="container topbar bg-primary d-none d-lg-block">
 				<div class="d-flex justify-content-between">
 					<div class="top-info ps-2">
-						<small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">123 Street, New York</a></small>
+						<small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Trường Đại Học FPT , Hòa Lạc , Hà Nội</a></small>
 						<small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Email@Example.com</a></small>
 					</div>
 					<div class="top-link pe-2">
-						<a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
-						<a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
-						<a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
+						<a href="#" class="text-white"><small class="text-white mx-2">Chính sách bảo mật</small>/</a>
+						<a href="#" class="text-white"><small class="text-white mx-2">Điều khoản sử dụng</small>/</a>
+						<a href="#" class="text-white"><small class="text-white ms-2">Bán hàng và hoàn tiền</small></a>
 					</div>
 				</div>
 			</div>
 			<div class="container px-0">
 				<nav class="navbar navbar-light bg-white navbar-expand-xl">
-					<a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Fruitables</h1></a>
+					<a href="" class="navbar-brand"><h1 class="text-primary display-6">My Dream House</h1></a>
 					<button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
 						<span class="fa fa-bars text-primary"></span>
 					</button>
 					<div class="collapse navbar-collapse bg-white" id="navbarCollapse">
 						<div class="navbar-nav mx-auto">
-							<a asp-controller="Home" asp-action="Index" class="nav-item nav-link active">Home</a>
-							<a asp-controller="HangHoa" asp-action="Index" class="nav-item nav-link">Shop</a>
+							<a asp-controller="Home" asp-action="Index" class="nav-item nav-link active">Trang Chủ</a>
+							<a asp-controller="HangHoa" asp-action="Index" class="nav-item nav-link">Sản Phẩm</a>
 							<a asp-controller="KhachHang" asp-action="DangKy" class="nav-item nav-link">Đăng ký</a>
-							<div class="nav-item dropdown">
-								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-								<div class="dropdown-menu m-0 bg-secondary rounded-0">
-									<a href="cart.html" class="dropdown-item">Cart</a>
-									<a href="checkout.html" class="dropdown-item">Checkout</a>
-									<a href="testimonial.html" class="dropdown-item">Testimonial</a>
-									<a href="404.html" class="dropdown-item">404 Page</a>
-								</div>
-							</div>
-							<a href="contact.html" class="nav-item nav-link">Contact</a>
+							@* <div class="nav-item dropdown"> *@
+							@* 	<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a> *@
+							@* 	<div class="dropdown-menu m-0 bg-secondary rounded-0"> *@
+							@* 		<a href="cart.html" class="dropdown-item">Cart</a> *@
+							@* 		<a href="checkout.html" class="dropdown-item">Checkout</a> *@
+							@* 		 <a href="testimonial.html" class="dropdown-item">Testimonial</a>  *@
+							@* 		 <a href="404.html" class="dropdown-item">404 Page</a>  *@
+							@* 	</div> *@
+							@* </div> *@
+							@* <a href="contact.html" class="nav-item nav-link">Hợp đồng</a> *@
 						</div>
 						<div class="d-flex m-3 me-0">
 							<button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
 
 							@await Component.InvokeAsync("Cart")
 
-							<a href="#" class="my-auto">
-								<i class="fas fa-user fa-2x"></i>
-							</a>
+							@{
+								var maKhachHang = Context.Session.GetString("MaKh");
+								var hoTen = Context.Session.GetString("HoTen");
+							}
+
+							@if (string.IsNullOrEmpty(maKhachHang))
+							{
+								<!-- Khi chưa đăng nhập -->
+								<a asp-controller="KhachHang" asp-action="DangNhap" class="nav-item nav-link my-auto">
+									<i class="fas fa-user fa-2x"></i>
+								</a>
+							}
+							else
+							{
+								<!-- Khi đã đăng nhập -->
+								<div class="nav-item dropdown">
+									<a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+										<i class="fas fa-user fa-2x me-2"></i>
+										<span class="d-none d-md-inline">@hoTen</span>
+									</a>
+									<div class="dropdown-menu dropdown-menu-end">
+										<a class="dropdown-item" asp-controller="KhachHang" asp-action="Profile">Hồ sơ cá nhân</a>
+										<a class="dropdown-item" asp-controller="KhachHang" asp-action="DangXuat">Đăng xuất</a>
+									</div>
+								</div>
+							}
+
 						</div>
 					</div>
 				</nav>
@@ -88,22 +112,27 @@
 		</div>
 		<!-- Navbar End -->
 		<!-- Modal Search Start -->
-		<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-fullscreen">
-				<div class="modal-content rounded-0">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+		<!-- Search Modal Start -->
+		<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<!-- Centered and medium size -->
+				<div class="modal-content rounded-3 border-0 shadow">
+					<div class="modal-header border-0 pb-0">
+						<h5 class="modal-title fw-semibold text-dark" id="searchModalLabel">Tìm kiếm sản phẩm</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<div class="modal-body d-flex align-items-center">
-						<div class="input-group w-75 mx-auto d-flex">
-							<input id="searchText" type="search" class="form-control p-3" placeholder="keywords" aria-describedby="seachButton">
-							<span id="seachButton" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+					<div class="modal-body py-4">
+						<div class="input-group input-group-lg">
+							<input id="searchText" type="search" class="form-control rounded-start-pill ps-4" placeholder="Nhập từ khóa" aria-describedby="searchButton">
+							<button id="searchButton" class="btn btn-primary rounded-end-pill px-4" type="button">
+								<i class="fa fa-search me-1"></i> Tìm kiếm
+							</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<!-- Search Modal End -->
 		<!-- Modal Search End -->
 
 		<div style="min-height:400px;" class="hero-header">
@@ -133,13 +162,47 @@
 	<script src="~/js/main.js"></script>
 	@RenderSection("Scripts", required: false)
 
+
 	<script>
-		$(document).ready(function () { 
-			$("#seachButton").click(function () { 
-				let url = `/HangHoa/Search?query=` + $("#searchText").val();
-				window.location.href = url;
+		$(document).ready(function () {
+			$("#searchButton").click(function () {
+				const query = $("#searchText").val().trim();
+				if (query !== "") {
+					let url = `/HangHoa/Search?query=` + encodeURIComponent(query);
+					window.location.href = url;
+				} else {
+					$("#searchText").addClass("is-invalid"); 
+				}
+			});
+
+			$("#searchText").on("input", function () {
+				$(this).removeClass("is-invalid");
 			});
 		});
+
 	</script>
+	><style>
+		.modal-content {
+			background-color: #fdfdfd;
+			border-radius: 16px;
+		}
+
+		#searchText:focus {
+			box-shadow: none;
+			border-color: #c2a570;
+		}
+
+		.btn-primary {
+			background-color: #c2a570;
+			border-color: #c2a570;
+		}
+
+			.btn-primary:hover {
+				background-color: #a88b5c;
+				border-color: #a88b5c;
+			}
+
+	</style>
 </body>
+
 </html>

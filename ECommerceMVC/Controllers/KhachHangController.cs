@@ -23,34 +23,146 @@ namespace ECommerceMVC.Controllers
 			return View();
 		}
 
-		[HttpPost]
-		public IActionResult DangKy(RegisterVM model, IFormFile Hinh)
-		{
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					var khachHang = _mapper.Map<KhachHang>(model);
-					khachHang.RandomKey = MyUtil.GenerateRamdomKey();
-					khachHang.MatKhau = model.MatKhau.ToMd5Hash(khachHang.RandomKey);
-					khachHang.HieuLuc = true;//sẽ xử lý khi dùng Mail để active
-					khachHang.VaiTro = 0;
+        [HttpPost]
+        public IActionResult DangKy(RegisterVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var khachHang = _mapper.Map<KhachHang>(model);
+                    khachHang.RandomKey = MyUtil.GenerateRamdomKey();
+                    khachHang.MatKhau = model.MatKhau.ToMd5Hash(khachHang.RandomKey);
+                    khachHang.HieuLuc = true; 
+                    khachHang.VaiTro = 0;
+                    db.Add(khachHang);
+                    db.SaveChanges();
 
-					if (Hinh != null)
-					{
-						khachHang.Hinh = MyUtil.UploadHinh(Hinh, "KhachHang");
-					}
+                    TempData["SuccessMessage"] = "Đăng ký tài khoản thành công!";
 
-					db.Add(khachHang);
-					db.SaveChanges();
-					return RedirectToAction("Index", "HangHoa");
-				}
-				catch (Exception ex)
-				{
-					var mess = $"{ex.Message} shh";
-				}
-			}
-			return View();
-		}
-	}
+                    return RedirectToAction("DangNhap", "KhachHang");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Đã xảy ra lỗi khi đăng ký: " + ex.Message);
+                }
+            }
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public IActionResult DangNhap()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult DangNhap(LoginVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Tìm khách hàng theo email hoặc tên đăng nhập
+                var kh = db.KhachHangs
+                    .FirstOrDefault(k => k.MaKh == model.Email);
+
+                if (kh == null)
+                {
+                    ModelState.AddModelError("Email", "Tên đăng nhập không đúng");
+                    return View(model);
+                }
+
+                if (!kh.HieuLuc)
+                {
+                    ModelState.AddModelError("", "Tài khoản chưa được kích hoạt");
+                    return View(model);
+                }
+
+                // Mã hóa mật khẩu nhập vào để so sánh
+                var matKhauMaHoa = model.Password.ToMd5Hash(kh.RandomKey);
+                if (kh.MatKhau != matKhauMaHoa)
+                {
+                    ModelState.AddModelError("Password", "Mật khẩu không đúng");
+                    return View(model);
+                }
+
+                // Đăng nhập thành công
+                HttpContext.Session.SetString("MaKh", kh.MaKh.ToString());
+                HttpContext.Session.SetString("HoTen", kh.HoTen);
+                HttpContext.Session.SetString("VaiTro", kh.VaiTro.ToString());
+
+                return RedirectToAction("Index", "HangHoa");
+            }
+
+            return View(model);
+        }
+        public IActionResult DangXuat()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Profile()
+        {
+            var maKhachHang = HttpContext.Session.GetString("MaKh");
+            if (string.IsNullOrEmpty(maKhachHang))
+            {
+                return RedirectToAction("DangNhap");
+            }
+
+            var khach = db.KhachHangs.FirstOrDefault(k => k.MaKh == maKhachHang);
+            if (khach == null)
+            {
+                return RedirectToAction("DangNhap");
+            }
+
+            return View(khach);
+        }
+        [HttpGet]
+        public IActionResult UpdateProfile()
+        {
+            var maKh = HttpContext.Session.GetString("MaKh");
+            if (string.IsNullOrEmpty(maKh)) return RedirectToAction("DangNhap");
+
+            var kh = db.KhachHangs.FirstOrDefault(k => k.MaKh == maKh);
+            if (kh == null) return NotFound();
+
+            var model = new EditProfileVM
+            {
+                MaKh = kh.MaKh,
+                HoTen = kh.HoTen,
+                NgaySinh = kh.NgaySinh,
+                Email = kh.Email,
+                DienThoai = kh.DienThoai,
+                DiaChi = kh.DiaChi
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Updateprofile(EditProfileVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var kh = db.KhachHangs.FirstOrDefault(k => k.MaKh == model.MaKh);
+                if (kh == null) return NotFound();
+
+                kh.HoTen = model.HoTen;
+                kh.NgaySinh = (DateTime)model.NgaySinh;
+                kh.Email = model.Email;
+                kh.DienThoai = model.DienThoai;
+                kh.DiaChi = model.DiaChi;
+
+                db.SaveChanges();
+                TempData["Success"] = "Cập nhật hồ sơ thành công!";
+                return RedirectToAction("Profile");
+            }
+
+            return View(model);
+        }
+
+
+    }
+
 }
