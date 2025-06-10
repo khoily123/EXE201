@@ -2,17 +2,11 @@
 @{
 	ViewData["Title"] = "Detail";
 }
+<!-- Đúng thứ tự này -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/controls/OrbitControls.js"></script>
 
-<!-- Single Page Header start -->
-@* <div class="container-fluid page-header py-5"> *@
-@* 	<h1 class="text-center text-white display-6">Shop Detail</h1> *@
-@* 	<ol class="breadcrumb justify-content-center mb-0"> *@
-@* 		<li class="breadcrumb-item"><a href="#">Home</a></li> *@
-@* 		<li class="breadcrumb-item"><a href="#">Hàng hóa</a></li> *@
-@* 		<li class="breadcrumb-item active text-white">@Model.TenHH</li> *@
-@* 	</ol> *@
-@* </div> *@
-<!-- Single Page Header End -->
+
 <!-- Single Product Start -->
 <div class="container-fluid py-5 mt-5">
 	<div class="container py-5">
@@ -20,11 +14,10 @@
 			<div class="col-lg-8 col-xl-9">
 				<div class="row g-4">
 					<div class="col-lg-6">
-						<div class="border rounded">
-							<a asp-action="Detail" asp-route-id="@Model.MaHh">
-								<img src="~/Hinh/HangHoa/@Model.Hinh" class="img-fluid rounded" alt="@Model.TenHH">
-							</a>
+						<div class="border rounded" style="height: 400px;">
+							<div id="modelViewer" style="width: 100%; height: 100%;"></div>
 						</div>
+
 					</div>
 					<div class="col-lg-6">
 						<h4 class="fw-bold mb-3">@Model.TenHH</h4>
@@ -76,7 +69,7 @@
 							</div>
 							<div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
 								<div class="d-flex">
-									<img src="img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+									<img src="~/Hinh/KhachHang/man.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
 									<div class="">
 										<p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
 										<div class="d-flex justify-content-between">
@@ -96,7 +89,7 @@
 									</div>
 								</div>
 								<div class="d-flex">
-									<img src="img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+									<img src="~/Hinh/KhachHang/man.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
 									<div class="">
 										<p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
 										<div class="d-flex justify-content-between">
@@ -133,7 +126,7 @@
 						<div class="row g-4">
 							<div class="col-lg-6">
 								<div class="border-bottom rounded">
-									<input type="text" class="form-control border-0 me-4" placeholder="Yur Name *">
+									<input type="text" class="form-control border-0 me-4" placeholder="Your Name *">
 								</div>
 							</div>
 							<div class="col-lg-6">
@@ -171,254 +164,60 @@
 						@await Html.PartialAsync("_TimKiemPanel")
 						@await Component.InvokeAsync("MenuLoai")
 					</div>
-					@* <div class="col-lg-12"> *@
-					@* 	<h4 class="mb-4">Featured products</h4> *@
-					@* 	<div class="d-flex align-items-center justify-content-start"> *@
-					@* 		<div class="rounded" style="width: 100px; height: 100px;"> *@
-					@* 			<img src="img/featur-1.jpg" class="img-fluid rounded" alt="Image"> *@
-					@* 		</div> *@
-					@* 		<div> *@
-					@* 			<h6 class="mb-2">Big Banana</h6> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star"></i> *@
-					@* 			</div> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<h5 class="fw-bold me-2">2.99 $</h5> *@
-					@* 				<h5 class="text-danger text-decoration-line-through">4.11 $</h5> *@
-					@* 			</div> *@
-					@* 		</div> *@
-					@* 	</div> *@
-					@* 	<div class="d-flex align-items-center justify-content-start"> *@
-					@* 		<div class="rounded" style="width: 100px; height: 100px;"> *@
-					@* 			<img src="img/featur-2.jpg" class="img-fluid rounded" alt=""> *@
-					@* 		</div> *@
-					@* 		<div> *@
-					@* 			<h6 class="mb-2">Big Banana</h6> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star"></i> *@
-					@* 			</div> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<h5 class="fw-bold me-2">2.99 $</h5> *@
-					@* 				<h5 class="text-danger text-decoration-line-through">4.11 $</h5> *@
-					@* 			</div> *@
-					@* 		</div> *@
-					@* 	</div> *@
-					@* 	<div class="d-flex align-items-center justify-content-start"> *@
-					@* 		<div class="rounded" style="width: 100px; height: 100px;"> *@
-					@* 			<img src="img/featur-3.jpg" class="img-fluid rounded" alt=""> *@
-					@* 		</div> *@
-					@* 		<div> *@
-					@* 			<h6 class="mb-2">Big Banana</h6> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star"></i> *@
-					@* 			</div> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<h5 class="fw-bold me-2">2.99 $</h5> *@
-					@* 				<h5 class="text-danger text-decoration-line-through">4.11 $</h5> *@
-					@* 			</div> *@
-					@* 		</div> *@
-					@* 	</div> *@
-					@* 	<div class="d-flex align-items-center justify-content-start"> *@
-					@* 		<div class="rounded me-4" style="width: 100px; height: 100px;"> *@
-					@* 			<img src="img/vegetable-item-4.jpg" class="img-fluid rounded" alt=""> *@
-					@* 		</div> *@
-					@* 		<div> *@
-					@* 			<h6 class="mb-2">Big Banana</h6> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star"></i> *@
-					@* 			</div> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<h5 class="fw-bold me-2">2.99 $</h5> *@
-					@* 				<h5 class="text-danger text-decoration-line-through">4.11 $</h5> *@
-					@* 			</div> *@
-					@* 		</div> *@
-					@* 	</div> *@
-					@* 	<div class="d-flex align-items-center justify-content-start"> *@
-					@* 		<div class="rounded me-4" style="width: 100px; height: 100px;"> *@
-					@* 			<img src="img/vegetable-item-5.jpg" class="img-fluid rounded" alt=""> *@
-					@* 		</div> *@
-					@* 		<div> *@
-					@* 			<h6 class="mb-2">Big Banana</h6> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star"></i> *@
-					@* 			</div> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<h5 class="fw-bold me-2">2.99 $</h5> *@
-					@* 				<h5 class="text-danger text-decoration-line-through">4.11 $</h5> *@
-					@* 			</div> *@
-					@* 		</div> *@
-					@* 	</div> *@
-					@* 	<div class="d-flex align-items-center justify-content-start"> *@
-					@* 		<div class="rounded me-4" style="width: 100px; height: 100px;"> *@
-					@* 			<img src="img/vegetable-item-6.jpg" class="img-fluid rounded" alt=""> *@
-					@* 		</div> *@
-					@* 		<div> *@
-					@* 			<h6 class="mb-2">Big Banana</h6> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star text-secondary"></i> *@
-					@* 				<i class="fa fa-star"></i> *@
-					@* 			</div> *@
-					@* 			<div class="d-flex mb-2"> *@
-					@* 				<h5 class="fw-bold me-2">2.99 $</h5> *@
-					@* 				<h5 class="text-danger text-decoration-line-through">4.11 $</h5> *@
-					@* 			</div> *@
-					@* 		</div> *@
-					@* 	</div> *@
-					@* 	<div class="d-flex justify-content-center my-4"> *@
-					@* 		<a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a> *@
-					@* 	</div> *@
-					@* </div> *@
-					@* <div class="col-lg-12"> *@
-					@* 	<div class="position-relative"> *@
-					@* 		<img src="img/banner-fruits.jpg" class="img-fluid w-100 rounded" alt=""> *@
-					@* 		<div class="position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);"> *@
-					@* 			<h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3> *@
-					@* 		</div> *@
-					@* 	</div> *@
-					@* </div> *@
-				</div>
-			</div>
-		</div>
-		<h1 class="fw-bold mb-0">Related products</h1>
-		<div class="vesitable">
-			<div class="owl-carousel vegetable-carousel justify-content-center">
-				<div class="border border-primary rounded position-relative vesitable-item">
-					<div class="vesitable-img">
-						<img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-					</div>
-					<div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-					<div class="p-4 pb-0 rounded-bottom">
-						<h4>Parsely</h4>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-						<div class="d-flex justify-content-between flex-lg-wrap">
-							<p class="text-dark fs-5 fw-bold">$4.99 / kg</p>
-							<a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-						</div>
-					</div>
-				</div>
-				<div class="border border-primary rounded position-relative vesitable-item">
-					<div class="vesitable-img">
-						<img src="img/vegetable-item-1.jpg" class="img-fluid w-100 rounded-top" alt="">
-					</div>
-					<div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-					<div class="p-4 pb-0 rounded-bottom">
-						<h4>Parsely</h4>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-						<div class="d-flex justify-content-between flex-lg-wrap">
-							<p class="text-dark fs-5 fw-bold">$4.99 / kg</p>
-							<a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-						</div>
-					</div>
-				</div>
-				<div class="border border-primary rounded position-relative vesitable-item">
-					<div class="vesitable-img">
-						<img src="img/vegetable-item-3.png" class="img-fluid w-100 rounded-top bg-light" alt="">
-					</div>
-					<div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-					<div class="p-4 pb-0 rounded-bottom">
-						<h4>Banana</h4>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-						<div class="d-flex justify-content-between flex-lg-wrap">
-							<p class="text-dark fs-5 fw-bold">$7.99 / kg</p>
-							<a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-						</div>
-					</div>
-				</div>
-				<div class="border border-primary rounded position-relative vesitable-item">
-					<div class="vesitable-img">
-						<img src="img/vegetable-item-4.jpg" class="img-fluid w-100 rounded-top" alt="">
-					</div>
-					<div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-					<div class="p-4 pb-0 rounded-bottom">
-						<h4>Bell Papper</h4>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-						<div class="d-flex justify-content-between flex-lg-wrap">
-							<p class="text-dark fs-5 fw-bold">$7.99 / kg</p>
-							<a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-						</div>
-					</div>
-				</div>
-				<div class="border border-primary rounded position-relative vesitable-item">
-					<div class="vesitable-img">
-						<img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-					</div>
-					<div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-					<div class="p-4 pb-0 rounded-bottom">
-						<h4>Potatoes</h4>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-						<div class="d-flex justify-content-between flex-lg-wrap">
-							<p class="text-dark fs-5 fw-bold">$7.99 / kg</p>
-							<a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-						</div>
-					</div>
-				</div>
-				<div class="border border-primary rounded position-relative vesitable-item">
-					<div class="vesitable-img">
-						<img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-					</div>
-					<div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-					<div class="p-4 pb-0 rounded-bottom">
-						<h4>Parsely</h4>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-						<div class="d-flex justify-content-between flex-lg-wrap">
-							<p class="text-dark fs-5 fw-bold">$7.99 / kg</p>
-							<a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-						</div>
-					</div>
-				</div>
-				<div class="border border-primary rounded position-relative vesitable-item">
-					<div class="vesitable-img">
-						<img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-					</div>
-					<div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-					<div class="p-4 pb-0 rounded-bottom">
-						<h4>Potatoes</h4>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-						<div class="d-flex justify-content-between flex-lg-wrap">
-							<p class="text-dark fs-5 fw-bold">$7.99 / kg</p>
-							<a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-						</div>
-					</div>
-				</div>
-				<div class="border border-primary rounded position-relative vesitable-item">
-					<div class="vesitable-img">
-						<img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-					</div>
-					<div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-					<div class="p-4 pb-0 rounded-bottom">
-						<h4>Parsely</h4>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-						<div class="d-flex justify-content-between flex-lg-wrap">
-							<p class="text-dark fs-5 fw-bold">$7.99 / kg</p>
-							<a href="#" class="btn border border-secondary rounded-pill px-3 py-1 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	let scene, camera, renderer, model, controls;
+	const modelPath = '/Model3D/uploads_files_2792345_Koenigsegg.obj';
+
+	init();
+	animate();
+
+	function init() {
+		const container = document.getElementById('modelViewer');
+		scene = new THREE.Scene();
+		scene.background = new THREE.Color(0xf0f0f0);
+
+		camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+		camera.position.set(0, 2, 5);
+
+		renderer = new THREE.WebGLRenderer({ antialias: true });
+		renderer.setSize(container.clientWidth, container.clientHeight);
+		container.appendChild(renderer.domElement);
+
+		const light1 = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
+		scene.add(light1);
+
+		const controls = new THREE.OrbitControls(camera, renderer.domElement);
+		controls.update();
+
+		const loader = new THREE.GLTFLoader();
+		loader.load(modelPath, function (gltf) {
+			model = gltf.scene;
+			scene.add(model);
+		}, undefined, function (error) {
+			console.error(error);
+		});
+
+		window.addEventListener('resize', onWindowResize);
+	}
+
+	function onWindowResize() {
+		const container = document.getElementById('modelViewer');
+		camera.aspect = container.clientWidth / container.clientHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(container.clientWidth, container.clientHeight);
+	}
+
+	function animate() {
+		requestAnimationFrame(animate);
+		if (model) model.rotation.y += 0.005;
+		renderer.render(scene, camera);
+	}
+</script>
+
 <!-- Single Product End -->

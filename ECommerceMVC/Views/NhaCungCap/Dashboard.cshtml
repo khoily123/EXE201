@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Bảng Điều Khiển Nhà Cung Cấp";
+    var tenDangNhap = Context.Session.GetString("TenDangNhap");
+    Layout = "~/Views/Shared/_LayoutNCC.cshtml";
+
+}
+
+<div class="container mt-5">
+    <div class="alert alert-success text-center">
+        <h4 class="mb-0">Xin chào, @tenDangNhap!</h4>
+        <p class="mb-0">Chào mừng bạn đến với bảng điều khiển Nhà Cung Cấp.</p>
+    </div>
+
+    <div class="row mt-4 g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Quản lý sản phẩm</h5>
+                    <p class="card-text">Xem, thêm, cập nhật thông tin sản phẩm của bạn.</p>
+                    <a asp-controller="SanPham" asp-action="Index" class="btn btn-outline-primary">Đi đến</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Đơn hàng</h5>
+                    <p class="card-text">Theo dõi và quản lý các đơn hàng từ khách hàng.</p>
+                    <a asp-controller="DonHang" asp-action="Index" class="btn btn-outline-primary">Xem đơn hàng</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Tài khoản của tôi</h5>
+                    <p class="card-text">Cập nhật thông tin đăng nhập và liên hệ.</p>
+                    <a asp-controller="TaiKhoanNhaCungCap" asp-action="ThongTin" class="btn btn-outline-primary">Thông tin tài khoản</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a asp-controller="TaiKhoanNhaCungCap" asp-action="DangXuat" class="btn btn-danger">Đăng xuất</a>
+    </div>
+</div>

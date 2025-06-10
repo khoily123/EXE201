@@ -1,6 +1,6 @@
 ﻿@model ECommerceMVC.ViewModels.LoginVM
 @{
-    ViewData["Title"] = "Đăng Nhập";
+    ViewData["Title"] = "Đăng nhập Nhà Cung Cấp";
 }
 <meta charset="UTF-8">
 
@@ -14,9 +14,9 @@
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="card shadow-lg border-0 p-4" style="width: 100%; max-width: 400px;">
         <div class="card-body">
-            <h3 class="text-center mb-4 text-primary fw-bold">Đăng Nhập</h3>
+            <h3 class="text-center mb-4 text-primary fw-bold">Đăng Nhập NCC</h3>
 
-            <form method="post" asp-action="DangNhap">
+            <form method="post" asp-action="DangNhapNCC">
                 <div class="mb-3">
                     <label asp-for="Username" class="form-label">Tên đăng nhập</label>
                     <input asp-for="Username" class="form-control" id="Email" />
@@ -41,20 +41,13 @@
                     <button type="submit" class="btn btn-primary">Đăng Nhập</button>
                 </div>
 
-                <!-- Nút chuyển sang đăng nhập NCC -->
+                <!-- Nút quay về đăng nhập khách hàng -->
                 <div class="d-grid">
-                    <a asp-controller="TaiKhoanNhaCungCap" asp-action="DangNhapNCC" class="btn btn-outline-secondary">
-                        Đăng nhập với tư cách nhà cung cấp
+                    <a asp-controller="KhachHang" asp-action="DangNhap" class="btn btn-outline-secondary">
+                        Đăng nhập với tư cách khách hàng
                     </a>
                 </div>
             </form>
-
-            <hr class="my-4">
-
-            <p class="text-center mb-0">
-                Chưa có tài khoản?
-                <a asp-controller="KhachHang" asp-action="DangKy" class="text-decoration-none text-primary">Đăng ký ngay</a>
-            </p>
         </div>
     </div>
 </div>
@@ -64,8 +57,8 @@
 
     <script>
         window.onload = function () {
-            var email = getCookie("UsernameKH");
-            var password = getCookie("PasswordKH");
+            var email = getCookie("UsernameNCC");
+            var password = getCookie("PasswordNCC");
 
             if (email && password) {
                 document.getElementById("Email").value = email;

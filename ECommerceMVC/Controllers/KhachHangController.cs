@@ -62,9 +62,7 @@ namespace ECommerceMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Tìm khách hàng theo email hoặc tên đăng nhập
-                var kh = db.KhachHangs
-                    .FirstOrDefault(k => k.MaKh == model.Email);
+                var kh = db.KhachHangs.FirstOrDefault(k => k.MaKh == model.Username);
 
                 if (kh == null)
                 {
@@ -78,7 +76,6 @@ namespace ECommerceMVC.Controllers
                     return View(model);
                 }
 
-                // Mã hóa mật khẩu nhập vào để so sánh
                 var matKhauMaHoa = model.Password.ToMd5Hash(kh.RandomKey);
                 if (kh.MatKhau != matKhauMaHoa)
                 {
@@ -86,20 +83,39 @@ namespace ECommerceMVC.Controllers
                     return View(model);
                 }
 
-                // Đăng nhập thành công
-                HttpContext.Session.SetString("MaKh", kh.MaKh.ToString());
+                // Set session
+                HttpContext.Session.SetString("MaKh", kh.MaKh);
                 HttpContext.Session.SetString("HoTen", kh.HoTen);
                 HttpContext.Session.SetString("VaiTro", kh.VaiTro.ToString());
+
+                // Store cookies for KhachHang if RememberMe is checked
+                if (model.RememberMe)
+                {
+                    CookieOptions option = new CookieOptions
+                    {
+                        Expires = DateTime.Now.AddDays(7),
+                        HttpOnly = false,
+                        IsEssential = true
+                    };
+                    Response.Cookies.Append("UsernameKH", model.Username, option);
+                    Response.Cookies.Append("PasswordKH", model.Password, option);
+                }
+                else
+                {
+                    Response.Cookies.Delete("UsernameKH");
+                    Response.Cookies.Delete("PasswordKH");
+                }
 
                 return RedirectToAction("Index", "HangHoa");
             }
 
             return View(model);
         }
+
         public IActionResult DangXuat()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("DangNhap", "KhachHang");
         }
 
         public IActionResult Profile()
