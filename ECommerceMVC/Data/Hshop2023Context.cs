@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ECommerceMVC.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceMVC.Data;
@@ -43,6 +44,8 @@ public partial class Hshop2023Context : DbContext
 
     public virtual DbSet<PhongBan> PhongBans { get; set; }
 
+    public virtual DbSet<TaiKhoanNhaCungCap> TaiKhoanNhaCungCaps { get; set; }
+
     public virtual DbSet<TrangThai> TrangThais { get; set; }
 
     public virtual DbSet<TrangWeb> TrangWebs { get; set; }
@@ -53,7 +56,7 @@ public partial class Hshop2023Context : DbContext
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Hshop2023;Integrated Security=True;Trust Server Certificate=True");
+//        => optionsBuilder.UseSqlServer("Data Source=(local);Initial Catalog=Hshop2023;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True\n");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -377,6 +380,31 @@ public partial class Hshop2023Context : DbContext
             entity.Property(e => e.TenPb)
                 .HasMaxLength(50)
                 .HasColumnName("TenPB");
+        });
+
+        modelBuilder.Entity<TaiKhoanNhaCungCap>(entity =>
+        {
+            entity.HasKey(e => e.MaTk).HasName("PK__TaiKhoan__272500702D03FB20");
+
+            entity.ToTable("TaiKhoanNhaCungCap");
+
+            entity.HasIndex(e => e.TenDangNhap, "UQ__TaiKhoan__55F68FC0CA60E9E2").IsUnique();
+
+            entity.Property(e => e.MaTk).HasColumnName("MaTK");
+            entity.Property(e => e.MaNcc)
+                .HasMaxLength(50)
+                .HasColumnName("MaNCC");
+            entity.Property(e => e.MatKhau).HasMaxLength(256);
+            entity.Property(e => e.NgayTao)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.TenDangNhap).HasMaxLength(50);
+            entity.Property(e => e.TrangThai).HasDefaultValue(true);
+
+            entity.HasOne(d => d.MaNccNavigation).WithMany(p => p.TaiKhoanNhaCungCaps)
+                .HasForeignKey(d => d.MaNcc)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TaiKhoanN__MaNCC__2BFE89A6");
         });
 
         modelBuilder.Entity<TrangThai>(entity =>

@@ -5,7 +5,7 @@ namespace ECommerceMVC.ViewModels
     public class LoginVM
     {
         [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập")]
-        public string Email { get; set; }
+        public string Username { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
         [DataType(DataType.Password)]
