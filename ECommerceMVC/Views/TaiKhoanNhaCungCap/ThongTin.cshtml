@@ -1,0 +1,34 @@
+﻿@model ECommerceMVC.Data.NhaCungCap
+
+@{
+    ViewData["Title"] = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_LayoutNCC.cshtml";
+}
+
+<div class="container">
+    <h3 class="text-primary text-center mb-4">Thông tin tài khoản nhà cung cấp</h3>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Mã NCC</dt>
+                <dd class="col-sm-9">@Model.MaNcc</dd>
+
+                <dt class="col-sm-3">Tên NCC</dt>
+                <dd class="col-sm-9">@Model.TenCongTy</dd>
+
+                <dt class="col-sm-3">Địa chỉ</dt>
+                <dd class="col-sm-9">@Model.DiaChi</dd>
+
+                <dt class="col-sm-3">Số điện thoại</dt>
+                <dd class="col-sm-9">@Model.DienThoai</dd>
+
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3">Tên liên hệ</dt>
+                <dd class="col-sm-9">@Model.NguoiLienLac</dd>
+            </dl>
+        </div>
+    </div>
+</div>

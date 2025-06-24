@@ -1,0 +1,94 @@
+﻿@model IEnumerable<ECommerceMVC.Data.HangHoa>
+
+@{
+    ViewData["Title"] = "Sản phẩm của tôi";
+    var maNcc = Context.Session.GetString("MaNCC");
+    Layout = "~/Views/Shared/_LayoutNCC.cshtml";
+
+}
+
+<div class="container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-primary text-center d-block w-100">Danh sách sản phẩm</h3>
+        <a class="btn btn-success" asp-action="Create">Thêm sản phẩm</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">Bạn chưa có sản phẩm nào.</div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>#</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Loại</th>
+                    <th>Hình</th>
+                    <th>Ngày sản xuất</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Where(x => x.MaNcc == maNcc))
+                {
+                    <tr>
+                        <td>@item.MaHh</td>
+                        <td>@item.TenHh</td>
+                        <td>@item.DonGia?.ToString("N0").Replace(",", ".") VND</td>
+                        <td>@item.MaLoaiNavigation?.TenLoai</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Hinh))
+                            {
+                                <img src="~/images/@item.Hinh" width="60" />
+                            }
+                        </td>
+                        <td>@item.NgaySx.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">
+                            <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.MaHh">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="javascript:void(0);" onclick="confirmDelete(@item.MaHh)" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash-alt"></i> Xóa
+                            </a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+@section Scripts {
+    <script>
+        function confirmDelete(id) {
+            if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) return;
+
+            fetch(`/SanPham/DeleteViaAjax/${id}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Đã xóa thành công!");
+                    location.reload();
+                } else {
+                    alert("Không thể xóa. Mã lỗi: " + response.status);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Có lỗi xảy ra khi gửi yêu cầu xóa.");
+            });
+        }
+    </script>
+
+}

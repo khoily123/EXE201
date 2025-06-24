@@ -1,0 +1,16 @@
+﻿@model ECommerceMVC.Data.HangHoa
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+    Layout = "~/Views/Shared/_LayoutNCC.cshtml";
+}
+<div class="container">
+    <h3 class="text-danger text-center mb-4">Xác nhận xóa sản phẩm</h3>
+    <div class="alert alert-warning">
+        <p>Bạn có chắc chắn muốn xóa sản phẩm <strong>@Model.TenHh</strong> không?</p>
+    </div>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaHh" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

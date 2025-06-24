@@ -7,16 +7,16 @@ namespace ECommerceMVC.Controllers
 {
 	public class HangHoaController : Controller
 	{
-		private readonly Hshop2023Context db;
+		private readonly Hshop2023Context _context;
 
 		public HangHoaController(Hshop2023Context conetxt)
 		{
-			db = conetxt;
+			_context = conetxt;
 		}
 
 		public IActionResult Index(int? loai)
 		{
-			var hangHoas = db.HangHoas.AsQueryable();
+			var hangHoas = _context.HangHoas.AsQueryable();
 
 			if (loai.HasValue)
 			{
@@ -37,7 +37,7 @@ namespace ECommerceMVC.Controllers
 
 		public IActionResult Search(string? query)
 		{
-			var hangHoas = db.HangHoas.AsQueryable();
+			var hangHoas = _context.HangHoas.AsQueryable();
 
 			if (query != null)
 			{
@@ -59,7 +59,7 @@ namespace ECommerceMVC.Controllers
 
 		public IActionResult Detail(int id)
 		{
-			var data = db.HangHoas
+			var data = _context.HangHoas
 				.Include(p => p.MaLoaiNavigation)
 				.SingleOrDefault(p => p.MaHh == id);
 			if (data == null)
@@ -82,5 +82,24 @@ namespace ECommerceMVC.Controllers
 			};
 			return View(result);
 		}
-	}
+        public IActionResult LocTheoGia(double gia)
+        {
+            var hangHoas = _context.HangHoas
+                .Include(h => h.MaLoaiNavigation)
+                .Where(h => h.DonGia <= gia)
+                .Select(h => new HangHoaVM
+                {
+                    MaHh = h.MaHh,
+                    TenHH = h.TenHh,
+                    DonGia = h.DonGia,
+                    Hinh = h.Hinh,
+                    TenLoai = h.MaLoaiNavigation.TenLoai
+                })
+                .ToList();
+
+            return View(hangHoas);
+
+        }
+
+    }
 }

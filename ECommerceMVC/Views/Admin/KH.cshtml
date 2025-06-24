@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ECommerceMVC.Data.KhachHang>
+@{
+    ViewData["Title"] = "Danh sách Khách Hàng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <h2 class="text-center text-primary mb-4">Quản lý Khách Hàng</h2>
+    <a asp-action="CreateKH" class="btn btn-success mb-3">+ Thêm khách hàng</a>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>Mã KH</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var kh in Model)
+            {
+                <tr>
+                    <td>@kh.MaKh</td>
+                    <td>@kh.HoTen</td>
+                    <td>@kh.Email</td>
+                    <td>@kh.DienThoai</td>
+                    <td>@kh.DiaChi</td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-warning" asp-action="EditKH" asp-route-id="@kh.MaKh">Sửa</a>
+                        <a href="javascript:void(0);" onclick="confirmDeleteNCC('@kh.MaKh')" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash-alt"></i> Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    <script>
+        function confirmDeleteNCC(maKh) {
+            if (!confirm("Bạn có chắc chắn muốn xóa khách hàng này không?")) return;
+
+            fetch(`/Admin/DeleteKHViaAjax/${maKh}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Đã xóa khách hàng thành công!");
+                    location.reload();
+                } else {
+                    alert("Không thể xóa. Mã lỗi: " + response.status);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Có lỗi xảy ra khi gửi yêu cầu xóa.");
+            });
+        }
+    </script>
+
+    }

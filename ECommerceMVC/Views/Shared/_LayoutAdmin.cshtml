@@ -52,8 +52,8 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-admin mb-4">
         <div class="container">
-            <a class="navbar-brand" asp-controller="NhaCungCap" asp-action="Dashboard">
-                <i class="fas fa-user-shield"></i> Quản Trị NCC
+            <a class="navbar-brand" asp-controller="Admin" asp-action="Dashboard">
+                <i class="fas fa-user-shield"></i> Quản Trị Admin
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -61,18 +61,13 @@
             <div class="collapse navbar-collapse" id="adminNavbar">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="NhaCungCap" asp-action="Index">
-                            <i class="fas fa-box"></i> Sản phẩm
+                        <a class="nav-link" asp-controller="Admin" asp-action="NCC">
+                            <i class="fas fa-users"></i> Nhà cung cấp
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="NhaCungCap" asp-action="DonHang">
-                            <i class="fas fa-shopping-cart"></i> Đơn hàng
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="TaiKhoanNhaCungCap" asp-action="ThongTin">
-                            <i class="fas fa-user-cog"></i> Tài khoản
+                        <a class="nav-link" asp-controller="Admin" asp-action="KH">
+                            <i class="fas fa-users"></i> Khách hàng
                         </a>
                     </li>
                 </ul>

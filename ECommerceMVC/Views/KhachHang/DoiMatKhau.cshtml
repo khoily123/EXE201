@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Đổi mật khẩu";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+<div class="container mt-4">
+    <h3 class="text-primary mb-3">Đổi mật khẩu</h3>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+    {
+        <div class="alert alert-danger">@error.ErrorMessage</div>
+    }
+    <form asp-action="DoiMatKhau" method="post">
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu cũ</label>
+            <input type="password" name="matKhauCu" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu mới</label>
+            <input type="password" name="matKhauMoi" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Nhập lại mật khẩu mới</label>
+            <input type="password" name="matKhauMoiNhapLai" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-success">Xác nhận</button>
+    </form>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success mt-3">@ViewBag.Message</div>
+    }
+</div>

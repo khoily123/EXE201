@@ -1,0 +1,44 @@
+﻿@model ECommerceMVC.Data.NhaCungCap
+@{
+    ViewData["Title"] = "Thêm nhà cung cấp";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="container mt-4">
+    <h3 class="text-primary">Thêm Nhà Cung Cấp</h3>
+    <form asp-action="CreateNCC" method="post">
+        <div class="mb-3">
+            <label asp-for="MaNcc" class="form-label">Mã NCC</label>
+            <input asp-for="MaNcc" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="TenCongTy" class="form-label">Tên công ty</label>
+            <input asp-for="TenCongTy" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="DiaChi" class="form-label">Địa chỉ</label>
+            <input asp-for="DiaChi" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="DienThoai" class="form-label">Điện thoại</label>
+            <input asp-for="DienThoai" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <!-- Thêm tài khoản/mật khẩu cho NCC -->
+        <div class="mb-3">
+            <label class="form-label">Tài khoản đăng nhập</label>
+            <input name="TaiKhoan" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu</label>
+            <input name="MatKhau" type="password" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">Thêm mới</button>
+        <a asp-action="NCC" class="btn btn-secondary">Hủy</a>
+    </form>
+
+</div>

@@ -2,9 +2,9 @@
 @{
 	ViewData["Title"] = "Detail";
 }
-<!-- Đúng thứ tự này -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/loaders/GLTFLoader.js"></script>
 
 
 <!-- Single Product Start -->
@@ -14,20 +14,20 @@
 			<div class="col-lg-8 col-xl-9">
 				<div class="row g-4">
 					<div class="col-lg-6">
-						@* <div class="border rounded" style="height: 400px;"> *@
-						@* 	<div id="modelViewer" style="width: 100%; height: 100%;"></div> *@
-						@* </div> *@
-						<div class="border rounded">
-							<a asp-action="Detail" asp-route-id="@Model.MaHh">
-								<img src="~/Hinh/HangHoa/@Model.Hinh" class="img-fluid rounded" alt="@Model.TenHH">
-							</a>
-						</div>
+						 @* <div class="border rounded" style="height: 400px;">  *@
+						 @* 	<div id="modelViewer" style="width: 100%; height: 100%;"></div>  *@
+						 @* </div>  *@
+						 <div class="border rounded"> 
+						 	<a asp-action="Detail" asp-route-id="@Model.MaHh"> 
+						 		<img src="~/Hinh/HangHoa/@Model.Hinh" class="img-fluid rounded" alt="@Model.TenHH"> 
+						 	</a> 
+						</div> 
 
 					</div>
 					<div class="col-lg-6">
 						<h4 class="fw-bold mb-3">@Model.TenHH</h4>
-						<p class="mb-3">Category: @Model.TenLoai</p>
-						<h5 class="fw-bold mb-3">$ @Model.DonGia</h5>
+						<p class="mb-3">Loại: @Model.TenLoai</p>
+						<h5 class="fw-bold mb-3"> @Model.DonGia.ToString("N0") VND </h5>
 						<div class="d-flex mb-4">
 							<i class="fa fa-star text-secondary"></i>
 							<i class="fa fa-star text-secondary"></i>
@@ -175,6 +175,7 @@
 	</div>
 </div>
 
+@* <script type="module" src="~/js/viewer.js"></script> *@
 <script>
 	let scene, camera, renderer, model, controls;
 	const modelPath = '/Model3D/chair01.gltf';
@@ -184,6 +185,11 @@
 
 	function init() {
 		const container = document.getElementById('modelViewer');
+		if (!container) {
+			console.error("Không tìm thấy #modelViewer");
+			return;
+		}
+
 		scene = new THREE.Scene();
 		scene.background = new THREE.Color(0xf0f0f0);
 
@@ -194,10 +200,10 @@
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		container.appendChild(renderer.domElement);
 
-		const light1 = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
-		scene.add(light1);
+		scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.5));
 
-		const controls = new THREE.OrbitControls(camera, renderer.domElement);
+		// ❗ OrbitControls KHÔNG thuộc THREE khi dùng UMD
+		controls = new OrbitControls(camera, renderer.domElement);
 		controls.update();
 
 		const loader = new THREE.GLTFLoader();
@@ -205,17 +211,14 @@
 			model = gltf.scene;
 			scene.add(model);
 		}, undefined, function (error) {
-			console.error(error);
+			console.error("Lỗi load model:", error);
 		});
 
-		window.addEventListener('resize', onWindowResize);
-	}
-
-	function onWindowResize() {
-		const container = document.getElementById('modelViewer');
-		camera.aspect = container.clientWidth / container.clientHeight;
-		camera.updateProjectionMatrix();
-		renderer.setSize(container.clientWidth, container.clientHeight);
+		window.addEventListener('resize', () => {
+			camera.aspect = container.clientWidth / container.clientHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize(container.clientWidth, container.clientHeight);
+		});
 	}
 
 	function animate() {
@@ -224,5 +227,6 @@
 		renderer.render(scene, camera);
 	}
 </script>
+
 
 <!-- Single Product End -->

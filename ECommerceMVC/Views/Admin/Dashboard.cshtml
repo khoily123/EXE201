@@ -1,0 +1,167 @@
+﻿@{
+    ViewData["Title"] = "Tổng quan hệ thống";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    /* Tổng thể thẻ thống kê */
+    .card {
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        background-color: #ffffff;
+    }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card i {
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Typography */
+    h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Màu sắc tương ứng cho biểu tượng */
+    .text-primary {
+        color: #007bff !important;
+    }
+
+    .text-success {
+        color: #28a745 !important;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .text-info {
+        color: #17a2b8 !important;
+    }
+
+    /* Chỉnh số liệu to rõ, cân đối */
+    .card h3, .card h4 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin: 0.5rem 0 0;
+    }
+
+    /* Alert trong thẻ doanh thu */
+    .alert-success {
+        background-color: #e8f5e9;
+        border-color: #c8e6c9;
+        color: #2e7d32;
+        font-size: 1.2rem;
+        padding: 1rem;
+        border-radius: 12px;
+    }
+</style>
+
+<div class="container">
+    <h2 class="text-primary text-center mb-5">Dashboard Quản Trị Hệ Thống</h2>
+
+    <!-- Hàng 1: Thống kê tổng quan -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-primary">
+                <div class="card-body">
+                    <i class="fas fa-users text-primary"></i>
+                    <h6 class="mt-3">Người dùng</h6>
+                    <h3 class="text-primary">@ViewBag.TongNguoiDung</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-success">
+                <div class="card-body">
+                    <i class="fas fa-store text-success"></i>
+                    <h6 class="mt-3">Nhà cung cấp</h6>
+                    <h3 class="text-success">@ViewBag.TongNhaCungCap</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-warning">
+                <div class="card-body">
+                    <i class="fas fa-box text-warning"></i>
+                    <h6 class="mt-3">Sản phẩm</h6>
+                    <h3 class="text-warning">@ViewBag.TongSanPham</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-danger">
+                <div class="card-body">
+                    <i class="fas fa-shopping-cart text-danger"></i>
+                    <h6 class="mt-3">Đơn hàng</h6>
+                    <h3 class="text-danger">@ViewBag.TongDonHang</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hàng 2: Doanh thu và trạng thái đơn -->
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-secondary">
+                <div class="card-body">
+                    <h6 class="text-secondary">ĐH Chờ xử lý</h6>
+                    <h4>@ViewBag.DonHangChoXuLy</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-info">
+                <div class="card-body">
+                    <h6 class="text-info">ĐH Đang xử lý</h6>
+                    <h4>@ViewBag.DonHangDangXuLy</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-success">
+                <div class="card-body">
+                    <h6 class="text-success">ĐH Thành công</h6>
+                    <h4>@ViewBag.DonHangThanhCong</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-danger">
+                <div class="card-body">
+                    <h6 class="text-danger">ĐH Đã hủy</h6>
+                    <h4>@ViewBag.DonHangBiHuy</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hàng 3: Đơn hàng bị hủy -->
+    <div class="row g-4 mt-4">
+        <div class="col-md-3">
+            <div class="card text-center border-start border-4 border-dark">
+                <div class="card-body">
+                    <i class="fas fa-money-bill-wave text-dark"></i>
+                    <h6 class="mt-3">Tổng doanh thu</h6>
+                    <h4 class="text-dark">@ViewBag.TongDoanhThu.ToString("N0").Replace(",", ".") VND</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

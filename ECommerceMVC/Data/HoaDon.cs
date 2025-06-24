@@ -25,6 +25,10 @@ public partial class HoaDon
 
     public double PhiVanChuyen { get; set; }
 
+    // 0 la cho
+    // 1 la dang xu ly
+    // 2 thanh cong
+    // 3 la khong thanh cong
     public int MaTrangThai { get; set; }
 
     public string? MaNv { get; set; }

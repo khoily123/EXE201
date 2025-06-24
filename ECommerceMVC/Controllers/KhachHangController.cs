@@ -3,17 +3,18 @@ using ECommerceMVC.Data;
 using ECommerceMVC.Helpers;
 using ECommerceMVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceMVC.Controllers
 {
 	public class KhachHangController : Controller
 	{
-		private readonly Hshop2023Context db;
+		private readonly Hshop2023Context _context;
 		private readonly IMapper _mapper;
 
 		public KhachHangController(Hshop2023Context context, IMapper mapper)
 		{
-			db = context;
+			_context = context;
 			_mapper = mapper;
 		}
 
@@ -35,8 +36,8 @@ namespace ECommerceMVC.Controllers
                     khachHang.MatKhau = model.MatKhau.ToMd5Hash(khachHang.RandomKey);
                     khachHang.HieuLuc = true; 
                     khachHang.VaiTro = 0;
-                    db.Add(khachHang);
-                    db.SaveChanges();
+                    _context.Add(khachHang);
+                    _context.SaveChanges();
 
                     TempData["SuccessMessage"] = "Đăng ký tài khoản thành công!";
 
@@ -62,7 +63,7 @@ namespace ECommerceMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var kh = db.KhachHangs.FirstOrDefault(k => k.MaKh == model.Username);
+                var kh = _context.KhachHangs.FirstOrDefault(k => k.MaKh == model.Username);
 
                 if (kh == null)
                 {
@@ -88,7 +89,7 @@ namespace ECommerceMVC.Controllers
                 HttpContext.Session.SetString("HoTen", kh.HoTen);
                 HttpContext.Session.SetString("VaiTro", kh.VaiTro.ToString());
 
-                // Store cookies for KhachHang if RememberMe is checked
+                // Store cookies if RememberMe
                 if (model.RememberMe)
                 {
                     CookieOptions option = new CookieOptions
@@ -106,11 +107,19 @@ namespace ECommerceMVC.Controllers
                     Response.Cookies.Delete("PasswordKH");
                 }
 
-                return RedirectToAction("Index", "HangHoa");
+                if (kh.VaiTro == 1)
+                {
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "HangHoa");
+                }
             }
 
             return View(model);
         }
+
 
         public IActionResult DangXuat()
         {
@@ -126,7 +135,7 @@ namespace ECommerceMVC.Controllers
                 return RedirectToAction("DangNhap");
             }
 
-            var khach = db.KhachHangs.FirstOrDefault(k => k.MaKh == maKhachHang);
+            var khach = _context.KhachHangs.FirstOrDefault(k => k.MaKh == maKhachHang);
             if (khach == null)
             {
                 return RedirectToAction("DangNhap");
@@ -140,7 +149,7 @@ namespace ECommerceMVC.Controllers
             var maKh = HttpContext.Session.GetString("MaKh");
             if (string.IsNullOrEmpty(maKh)) return RedirectToAction("DangNhap");
 
-            var kh = db.KhachHangs.FirstOrDefault(k => k.MaKh == maKh);
+            var kh = _context.KhachHangs.FirstOrDefault(k => k.MaKh == maKh);
             if (kh == null) return NotFound();
 
             var model = new EditProfileVM
@@ -161,7 +170,7 @@ namespace ECommerceMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var kh = db.KhachHangs.FirstOrDefault(k => k.MaKh == model.MaKh);
+                var kh = _context.KhachHangs.FirstOrDefault(k => k.MaKh == model.MaKh);
                 if (kh == null) return NotFound();
 
                 kh.HoTen = model.HoTen;
@@ -170,12 +179,46 @@ namespace ECommerceMVC.Controllers
                 kh.DienThoai = model.DienThoai;
                 kh.DiaChi = model.DiaChi;
 
-                db.SaveChanges();
+                _context.SaveChanges();
                 TempData["Success"] = "Cập nhật hồ sơ thành công!";
                 return RedirectToAction("Profile");
             }
 
             return View(model);
+        }
+        [HttpGet]
+        public IActionResult DoiMatKhau()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DoiMatKhau(string matKhauCu, string matKhauMoi, string matKhauMoiNhapLai)
+        {
+            var maKH = HttpContext.Session.GetString("MaKh");
+            var kh = _context.KhachHangs.FirstOrDefault(x => x.MaKh == maKH);
+
+            if (kh == null) return NotFound();
+
+            var matKhauCuHash = matKhauCu.ToMd5Hash(kh.RandomKey);
+            if (kh.MatKhau != matKhauCuHash)
+            {
+                ModelState.AddModelError("", "Mật khẩu cũ không chính xác.");
+                return View();
+            }
+
+            if (matKhauMoi != matKhauMoiNhapLai)
+            {
+                ModelState.AddModelError("", "Mật khẩu mới không khớp.");
+                return View();
+            }
+
+            kh.MatKhau = matKhauMoi.ToMd5Hash(kh.RandomKey);
+            _context.SaveChanges();
+
+            TempData["Success"] = "Đổi mật khẩu thành công!";
+            return View();
         }
 
 

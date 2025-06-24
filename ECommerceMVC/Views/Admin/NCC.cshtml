@@ -1,0 +1,73 @@
+﻿@model IEnumerable<ECommerceMVC.Data.NhaCungCap>
+@{
+    ViewData["Title"] = "Danh sách Nhà Cung Cấp";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <h2 class="text-center text-primary mb-4">Quản lý Nhà Cung Cấp</h2>
+    <a asp-action="CreateNCC" class="btn btn-success mb-3">+ Thêm nhà cung cấp</a>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>Mã NCC</th>
+                <th>Tên công ty</th>
+                <th>Email</th>
+                <th>Địa chỉ</th>
+                <th>Điện thoại</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ncc in Model)
+            {
+                <tr>
+                    <td>@ncc.MaNcc</td>
+                    <td>@ncc.TenCongTy</td>
+                    <td>@ncc.Email</td>
+                    <td>@ncc.DiaChi</td>
+                    <td>@ncc.DienThoai</td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-warning" asp-action="EditNCC" asp-route-id="@ncc.MaNcc">Sửa</a>
+                        <a href="javascript:void(0);" onclick="confirmDeleteNCC('@ncc.MaNcc')" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash-alt"></i> Xóa
+                        </a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    <script>
+        function confirmDeleteNCC(maNcc) {
+            if (!confirm("Bạn có chắc chắn muốn xóa nhà cung cấp này không?")) return;
+
+            fetch(`/Admin/DeleteNCCViaAjax/${maNcc}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Đã xóa nhà cung cấp và tài khoản thành công!");
+                    location.reload();
+                } else {
+                    alert("Không thể xóa. Mã lỗi: " + response.status);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Có lỗi xảy ra khi gửi yêu cầu xóa.");
+            });
+        }
+    </script>
+
+    }

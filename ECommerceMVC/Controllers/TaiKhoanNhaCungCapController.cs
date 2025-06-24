@@ -2,17 +2,18 @@
 using ECommerceMVC.Helpers;
 using ECommerceMVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceMVC.Controllers
 {
     public class TaiKhoanNhaCungCapController : Controller
     {
-        private readonly Hshop2023Context db;
+        private readonly Hshop2023Context _context;
         private readonly string saltKey = "qwertyuiopasdfghjklzxcvbnm123456789";
 
         public TaiKhoanNhaCungCapController(Hshop2023Context context)
         {
-            db = context;
+            _context = context;
         }
         public IActionResult DangNhapNCC()
         {
@@ -28,7 +29,7 @@ namespace ECommerceMVC.Controllers
                 return View(model);
             }
 
-            var tk = db.TaiKhoanNhaCungCaps
+            var tk = _context.TaiKhoanNhaCungCaps
                        .FirstOrDefault(x => x.TenDangNhap == model.Username);
 
             if (tk == null)
@@ -82,6 +83,26 @@ namespace ECommerceMVC.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("DangNhapNCC");
         }
+
+
+        public IActionResult ThongTin()
+        {
+            var maNcc = HttpContext.Session.GetString("MaNCC");
+            if (string.IsNullOrEmpty(maNcc))
+            {
+                return RedirectToAction("DangNhap", "TaiKhoanNhaCungCap");
+            }
+
+            var ncc = _context.NhaCungCaps.FirstOrDefault(n => n.MaNcc == maNcc);
+            if (ncc == null)
+            {
+                return NotFound();
+            }
+
+            return View(ncc);
+        }
+
+
 
     }
 }

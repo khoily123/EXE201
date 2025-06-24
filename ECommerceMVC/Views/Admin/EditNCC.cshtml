@@ -1,0 +1,41 @@
+﻿@model ECommerceMVC.Data.NhaCungCap
+@{
+    ViewData["Title"] = "Sửa nhà cung cấp";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <h3 class="text-primary">Sửa Nhà Cung Cấp</h3>
+    <form asp-action="EditNCC" method="post">
+        <input type="hidden" asp-for="MaNcc" />
+
+        <div class="mb-3">
+            <label asp-for="TenCongTy" class="form-label">Tên công ty</label>
+            <input asp-for="TenCongTy" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DiaChi" class="form-label">Địa chỉ</label>
+            <input asp-for="DiaChi" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DienThoai" class="form-label">Điện thoại</label>
+            <input asp-for="DienThoai" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu mới</label>
+            <input name="MatKhauMoi" type="password" class="form-control" />
+            <small class="text-muted">Để trống nếu không muốn đổi mật khẩu</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        <a asp-action="NCC" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

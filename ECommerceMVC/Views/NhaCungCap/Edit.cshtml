@@ -1,0 +1,37 @@
+﻿@model ECommerceMVC.Data.HangHoa
+@{
+    ViewData["Title"] = "Chỉnh sửa sản phẩm";
+    Layout = "~/Views/Shared/_LayoutNCC.cshtml";
+}
+<div class="container">
+    <h3 class="text-primary text-center mb-4">Chỉnh sửa sản phẩm</h3>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="MaHh" />
+        <div class="mb-3">
+            <label asp-for="TenHh" class="form-label">Tên sản phẩm</label>
+            <input asp-for="TenHh" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="DonGia" class="form-label">Đơn giá</label>
+            <input asp-for="DonGia" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="MaLoai" class="form-label">Loại sản phẩm</label>
+            <select asp-for="MaLoai" asp-items="ViewBag.LoaiList" class="form-select"></select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="MoTaDonVi" class="form-label">Mô tả đơn vị</label>
+            <input asp-for="MoTaDonVi" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="NgaySx" class="form-label">Ngày sản xuất</label>
+            <input asp-for="NgaySx" class="form-control" type="date" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Hinh" class="form-label">Hình ảnh</label>
+            <input asp-for="Hinh" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
