@@ -22,4 +22,13 @@
 		public int DiemDanhGia { get; set; }
 		public int SoLuongTon { get; set; }
 	}
+    public class HangHoaPagingVM
+    {
+        public IEnumerable<HangHoaVM> Items { get; set; } = new List<HangHoaVM>();
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
+        public int TotalItems { get; set; }
+
+    }
+
 }

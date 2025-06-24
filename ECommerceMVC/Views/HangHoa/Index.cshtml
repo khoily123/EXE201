@@ -1,34 +1,33 @@
-﻿@model IEnumerable<ECommerceMVC.ViewModels.HangHoaVM>
+﻿@model ECommerceMVC.ViewModels.HangHoaPagingVM
 
 @{
 	ViewData["Title"] = "Index";
 	Layout = "_DanhSachHangHoa";
 }
 
-<!-- Single Page Header start -->
-@* @section BreadCum { *@
-@* 	<div class="container-fluid page-header py-5"> *@
-@* 		<h1 class="text-center text-white display-6">Shop</h1> *@
-@* 		<ol class="breadcrumb justify-content-center mb-0"> *@
-@* 			<li class="breadcrumb-item"><a href="#">Home</a></li> *@
-@* 			<li class="breadcrumb-item"><a href="#">Pages</a></li> *@
-@* 			<li class="breadcrumb-item active text-white">Shop</li> *@
-@* 		</ol> *@
-@* 	</div> *@
-@* } *@
-<!-- Single Page Header End -->
+<!-- Tổng số sản phẩm -->
+<h3> Có <b>@Model.TotalItems</b> sản phẩm.</h3>
 
-@await Html.PartialAsync("ProductItem", Model)
+<!-- Hiển thị danh sách sản phẩm -->
+@await Html.PartialAsync("ProductItem", Model.Items)
 
+<!-- Phân trang -->
 <div class="col-12">
 	<div class="pagination d-flex justify-content-center mt-5">
-		<a href="#" class="rounded">&laquo;</a>
-		<a href="#" class="active rounded">1</a>
-		<a href="#" class="rounded">2</a>
-		<a href="#" class="rounded">3</a>
-		<a href="#" class="rounded">4</a>
-		<a href="#" class="rounded">5</a>
-		<a href="#" class="rounded">6</a>
-		<a href="#" class="rounded">&raquo;</a>
+		@if (Model.CurrentPage > 1)
+		{
+			<a class="rounded" href="@Url.Action("Index", new { loai = ViewBag.CurrentLoai, page = Model.CurrentPage - 1 })">&laquo;</a>
+		}
+
+		@for (int i = 1; i <= Model.TotalPages; i++)
+		{
+			<a class="rounded @(i == Model.CurrentPage ? "active" : "")"
+			   href="@Url.Action("Index", new { loai = ViewBag.CurrentLoai, page = i })">@i</a>
+		}
+
+		@if (Model.CurrentPage < Model.TotalPages)
+		{
+			<a class="rounded" href="@Url.Action("Index", new { loai = ViewBag.CurrentLoai, page = Model.CurrentPage + 1 })">&raquo;</a>
+		}
 	</div>
 </div>

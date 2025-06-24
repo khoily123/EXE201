@@ -14,50 +14,91 @@ namespace ECommerceMVC.Controllers
 			_context = conetxt;
 		}
 
-		public IActionResult Index(int? loai)
-		{
-			var hangHoas = _context.HangHoas.AsQueryable();
+        public IActionResult Index(int? loai, int page = 1)
+        {
+            int pageSize = 9;
 
-			if (loai.HasValue)
-			{
-				hangHoas = hangHoas.Where(p => p.MaLoai == loai.Value);
-			}
+            var hangHoas = _context.HangHoas.AsQueryable();
 
-			var result = hangHoas.Select(p => new HangHoaVM
-			{
-				MaHh = p.MaHh,
-				TenHH = p.TenHh,
-				DonGia = p.DonGia ?? 0,
-				Hinh = p.Hinh ?? "",
-				MoTaNgan = p.MoTaDonVi ?? "",
-				TenLoai = p.MaLoaiNavigation.TenLoai
-			});
-			return View(result);
-		}
+            if (loai.HasValue)
+            {
+                hangHoas = hangHoas.Where(p => p.MaLoai == loai.Value);
+                ViewBag.CurrentLoai = loai;
+            }
 
-		public IActionResult Search(string? query)
-		{
-			var hangHoas = _context.HangHoas.AsQueryable();
+            int totalItems = hangHoas.Count();
 
-			if (query != null)
-			{
-				hangHoas = hangHoas.Where(p => p.TenHh.Contains(query));
-			}
+            var items = hangHoas
+                .OrderBy(p => p.MaHh) 
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => new HangHoaVM
+                {
+                    MaHh = p.MaHh,
+                    TenHH = p.TenHh,
+                    DonGia = p.DonGia ?? 0,
+                    Hinh = p.Hinh ?? "",
+                    MoTaNgan = p.MoTaDonVi ?? "",
+                    TenLoai = p.MaLoaiNavigation.TenLoai
+                })
+                .ToList();
 
-			var result = hangHoas.Select(p => new HangHoaVM
-			{
-				MaHh = p.MaHh,
-				TenHH = p.TenHh,
-				DonGia = p.DonGia ?? 0,
-				Hinh = p.Hinh ?? "",
-				MoTaNgan = p.MoTaDonVi ?? "",
-				TenLoai = p.MaLoaiNavigation.TenLoai
-			});
-			return View(result);
-		}
+            var model = new HangHoaPagingVM
+            {
+                Items = items,
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling((double)totalItems / pageSize),
+                TotalItems = totalItems 
+
+            };
+
+            return View(model);
+        }
 
 
-		public IActionResult Detail(int id)
+        public IActionResult Search(string? query, int page = 1)
+        {
+            int pageSize = 9;
+
+            var querysearch = _context.HangHoas.AsQueryable();
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                querysearch = querysearch.Where(p => p.TenHh.Contains(query));
+                ViewBag.Keyword = query;
+            }
+
+            int totalItems = querysearch.Count();
+
+            var items = querysearch
+                .OrderBy(p => p.MaHh)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => new HangHoaVM
+                {
+                    MaHh = p.MaHh,
+                    TenHH = p.TenHh,
+                    DonGia = p.DonGia ?? 0,
+                    Hinh = p.Hinh ?? "",
+                    MoTaNgan = p.MoTaDonVi ?? "",
+                    TenLoai = p.MaLoaiNavigation.TenLoai
+                })
+                .ToList();
+
+            var model = new HangHoaPagingVM
+            {
+                Items = items,
+                TotalItems = totalItems,
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling((double)totalItems / pageSize)
+            };
+
+            return View(model);
+        }
+
+
+
+        public IActionResult Detail(int id)
 		{
 			var data = _context.HangHoas
 				.Include(p => p.MaLoaiNavigation)
