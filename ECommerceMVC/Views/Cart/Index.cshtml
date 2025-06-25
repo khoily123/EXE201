@@ -1,96 +1,120 @@
 ﻿@model IEnumerable<ECommerceMVC.ViewModels.CartItem>
 @{
-	ViewData["Title"] = "Giỏ hàng";
+    ViewData["Title"] = "Giỏ hàng";
 }
 
-<!-- Single Page Header start -->
-@* <div class="container-fluid page-header py-5"> *@
-@* 	<h1 class="text-center text-white display-6">Cart</h1> *@
-@* 	<ol class="breadcrumb justify-content-center mb-0"> *@
-@* 		<li class="breadcrumb-item"><a href="#">Home</a></li> *@
-@* 		<li class="breadcrumb-item"><a href="#">Pages</a></li> *@
-@* 		<li class="breadcrumb-item active text-white">Cart</li> *@
-@* 	</ol> *@
-@* </div> *@
-<!-- Single Page Header End -->
-<!-- Cart Page Start -->
 <div class="container-fluid py-5">
-	<div class="container py-5">
-		<div class="table-responsive">
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">Sản phẩm</th>
-						<th scope="col">Tên</th>
-						<th scope="col">Giá</th>
-						<th scope="col">Số lượng</th>
-						<th scope="col">Tổng tiền</th>
-						<th scope="col">Xóa</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model)
-					{
-						<tr>
-							<th scope="row">
-								<div class="d-flex align-items-center">
-									<img src="~/Hinh/HangHoa/@item.Hinh" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="@item.TenHH">
-								</div>
-							</th>
-							<td>
-								<p class="mb-0 mt-4">
-									<a asp-action="Detail" asp-controller="HangHoa" asp-route-id="@item.MaHh">
-										@item.TenHH
-									</a>
-								</p>
-							</td>
-							<td>
-								<p class="mb-0 mt-4">@item.DonGia VND</p>
-							</td>
-							<td>
-								<div class="input-group quantity mt-4" style="width: 100px;">
-									<div class="input-group-btn">
-										<button class="btn btn-sm btn-minus rounded-circle bg-light border">
-											<i class="fa fa-minus"></i>
-										</button>
-									</div>
-									<input type="text" class="form-control form-control-sm text-center border-0" value="@item.SoLuong">
-									<div class="input-group-btn">
-										<button class="btn btn-sm btn-plus rounded-circle bg-light border">
-											<i class="fa fa-plus"></i>
-										</button>
-									</div>
-								</div>
-							</td>
-							<td>
-								<p class="mb-0 mt-4">$ @item.ThanhTien</p>
-							</td>
-							<td>
-								<a asp-action="RemoveCart" asp-controller="Cart" asp-route-id="@item.MaHh" class="btn btn-md rounded-circle bg-light border mt-4">
-									<i class="fa fa-times text-danger"></i>
-								</a>
-							</td>
+    <div class="container py-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Sản phẩm</th>
+                        <th scope="col">Tên</th>
+                        <th scope="col">Giá</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="~/Hinh/HangHoa/@item.Hinh" class="img-fluid me-3 rounded-circle" style="width: 80px; height: 80px;" alt="@item.TenHH">
+                                </div>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">
+                                    <a asp-action="Detail" asp-controller="HangHoa" asp-route-id="@item.MaHh">
+                                        @item.TenHH
+                                    </a>
+                                </p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.DonGia.ToString("N0") VND</p>
+                            </td>
+                            <td>
+                                <div class="input-group quantity mt-4" style="width: 100px;">
+                                    <button type="button" class="btn btn-sm btn-minus rounded-circle bg-light border" data-id="@item.MaHh">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <input type="text" id="qty-@item.MaHh" class="form-control form-control-sm text-center border-0" value="@item.SoLuong" readonly>
+                                    <button type="button" class="btn btn-sm btn-plus rounded-circle bg-light border" data-id="@item.MaHh">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4" id="total-@item.MaHh">@item.ThanhTien.ToString("N0") VND</p>
+                            </td>
+                            <td>
+                                <a asp-action="RemoveCart" asp-controller="Cart" asp-route-id="@item.MaHh" class="btn btn-md rounded-circle bg-light border mt-4">
+                                    <i class="fa fa-times text-danger"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-						</tr>
-					}
-				</tbody>
-			</table>
-		</div>
-		<div class="row g-4 justify-content-end">
-			<div class="col-8"></div>
-			<div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-				<div class="bg-light rounded">
-					<div class="p-4">
-						<h1 class="display-6 mb-4">Tổng <span class="fw-normal">giỏ hàng</span></h1>
-					</div>
-					<div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-						<h5 class="mb-0 ps-4 me-4">Tổng tiền</h5>
-						<p class="mb-0 pe-4">@Model.Sum(p => p.ThanhTien) VND</p>
-					</div>
-					<button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Tiến hành thanh toán</button>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="row g-4 justify-content-end">
+            <div class="col-8"></div>
+            <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                <div class="bg-light rounded">
+                    <div class="p-4">
+                        <h1 class="display-6 mb-4">Tổng <span class="fw-normal">giỏ hàng</span></h1>
+                    </div>
+                    <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                        <h5 class="mb-0 ps-4 me-4">Tổng tiền</h5>
+                        <p class="mb-0 pe-4" id="cart-total">@Model.Sum(p => p.ThanhTien).ToString("N0") VND</p>
+                    </div>
+                    <a href="@Url.Action("Checkout", "Cart")" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">
+                        Tiến hành thanh toán
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<!-- Cart Page End -->
+
+<!-- JavaScript AJAX xử lý cộng/trừ -->
+<script>
+           document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.btn-plus, .btn-minus').forEach(btn => {
+            // Xóa sự kiện cũ trước khi gắn
+            btn.replaceWith(btn.cloneNode(true));
+        });
+
+        document.querySelectorAll('.btn-plus, .btn-minus').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const id = this.getAttribute('data-id');
+                const input = document.querySelector(`#qty-${id}`);
+                let currentQty = parseInt(input.value);
+
+                if (this.classList.contains('btn-plus')) currentQty++;
+                else if (this.classList.contains('btn-minus')) currentQty--;
+
+                if (currentQty >= 0) {
+                    const response = await fetch('/Cart/UpdateQuantity', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: parseInt(id), quantity: currentQty })
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        input.value = result.quantity;
+                        document.querySelector(`#total-${id}`).innerText = `${result.totalItemPrice.toLocaleString()} VND`;
+                        document.querySelector(`#cart-total`).innerText = `${result.cartTotal.toLocaleString()} VND`;
+                    }
+                }
+            });
+        });
+    });
+
+</script>

@@ -88,6 +88,8 @@ namespace ECommerceMVC.Controllers
                 HttpContext.Session.SetString("MaKh", kh.MaKh);
                 HttpContext.Session.SetString("HoTen", kh.HoTen);
                 HttpContext.Session.SetString("VaiTro", kh.VaiTro.ToString());
+                // Save full KhachHang object
+                HttpContext.Session.Set<KhachHang>("KhachHang", kh);
 
                 // Store cookies if RememberMe
                 if (model.RememberMe)

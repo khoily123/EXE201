@@ -1,0 +1,35 @@
+﻿@model ECommerceMVC.Data.HoaDon
+
+<h2 class="text-center">🧾 HÓA ĐƠN THANH TOÁN</h2>
+<p><strong>Mã hóa đơn:</strong> @Model.MaHd</p>
+<p><strong>Khách hàng:</strong> @Model.MaKhNavigation.HoTen</p>
+<p><strong>Ngày đặt:</strong> @Model.NgayDat.ToString("dd/MM/yyyy")</p>
+<p><strong>Trạng thái:</strong> @Model.MaTrangThaiNavigation.TenTrangThai</p>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Đơn giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ChiTietHds)
+        {
+            <tr>
+                <td>@item.MaHhNavigation.TenHh</td>
+                <td>@item.DonGia.ToString("N0")</td>
+                <td>@item.SoLuong</td>
+                <td>@(item.DonGia * item.SoLuong).ToString("N0")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4 class="text-end mt-4">Tổng tiền: @Model.ChiTietHds.Sum(c => c.DonGia * c.SoLuong).ToString("N0") VND</h4>
+
+<div class="text-end mt-3">
+    <a class="btn btn-primary" asp-action="Index" asp-controller="HangHoa">← Trở về trang chủ</a>
+</div>
