@@ -1,10 +1,50 @@
-﻿<div class="text-center mt-4">
-    <img src="@ViewBag.QRCodeUrl" alt="QR Code thanh toán" class="img-fluid" style="max-width: 300px;" />
-    <p class="mt-3">💬 Nội dung chuyển khoản: <strong>@ViewBag.Content</strong></p>
+﻿@{
+    var secondsRemaining = 180; // 3 phút
+}
+<div class="text-center mt-4">
+    <img src="@ViewBag.QRCodeUrl" alt="QR Code thanh toán" class="img-fluid border p-2 shadow-sm" style="max-width: 300px;" />
+
+    <p class="mt-3">
+        💬 <strong>Nội dung chuyển khoản:</strong><br />
+        <span class="text-dark">@ViewBag.Content</span>
+    </p>
+
     <h4 class="text-success">💰 Tổng tiền: @ViewBag.Total.ToString("N0") VND</h4>
 
-    <div class="mt-4">
-        <a href="@Url.Action("CancelOrder", "Cart")" class="btn btn-outline-danger">❌ Hủy đơn hàng</a>
-        <a href="@Url.Action("ConfirmPayment", "Cart")" class="btn btn-primary ms-2">✅ Tôi đã thanh toán</a>
+    <div class="mt-3 text-danger fw-bold">
+        ⏳ Mã QR hết hạn sau: <span id="countdown"></span>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-center gap-3">
+        <a href="@Url.Action("CancelOrder", "Cart")" class="btn btn-outline-danger">
+            ❌ Hủy đơn hàng
+        </a>
+        <a href="@Url.Action("ConfirmPayment", "Cart")" class="btn btn-primary">
+            ✅ Tôi đã thanh toán
+        </a>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let remaining = @secondsRemaining;
+        const countdownEl = document.getElementById("countdown");
+
+        function updateCountdown() {
+            if (remaining <= 0) {
+                countdownEl.innerText = "Đã hết hạn!";
+                countdownEl.classList.add("text-muted");
+                setTimeout(() => location.reload(), 3000);
+                return;
+            }
+
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            countdownEl.innerText = `${minutes} phút ${seconds} giây`;
+            remaining--;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    });
+</script>

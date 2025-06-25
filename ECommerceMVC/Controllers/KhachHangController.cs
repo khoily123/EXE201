@@ -125,7 +125,10 @@ namespace ECommerceMVC.Controllers
 
         public IActionResult DangXuat()
         {
-            HttpContext.Session.Clear();
+            HttpContext.Session.Remove("MaKh");
+            HttpContext.Session.Remove("HoTen");
+            HttpContext.Session.Remove("VaiTro");
+
             return RedirectToAction("DangNhap", "KhachHang");
         }
 

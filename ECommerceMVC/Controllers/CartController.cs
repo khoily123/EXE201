@@ -108,18 +108,18 @@ namespace ECommerceMVC.Controllers
                 return RedirectToAction("DangNhap", "KhachHang");
             }
 
-            var cart = Cart;
+            var cart = Cart; 
             if (cart == null || !cart.Any())
             {
                 TempData["Message"] = "Giỏ hàng của bạn đang trống.";
                 return RedirectToAction("Index");
             }
 
-            var total = cart.Sum(p => p.ThanhTien);
+            var total = cart.Sum(p => p.ThanhTien); 
 
-            string bankCode = "MB"; // MB Bank
-            string accountNumber = "0962698931"; // Thay bằng STK thực tế
-            string accountName = "Ly Tien Khoi";  // KHÔNG dấu
+            string bankCode = "MB";
+            string accountNumber = "0962698931";
+            string accountName = "Ly Tien Khoi";
             string content = "Thanh toan don hang " + DateTime.Now.Ticks;
 
             string qrUrl = $"https://img.vietqr.io/image/{bankCode}-{accountNumber}-compact.png" +
@@ -128,15 +128,17 @@ namespace ECommerceMVC.Controllers
             ViewBag.QRCodeUrl = qrUrl;
             ViewBag.Total = total;
             ViewBag.Content = content;
-            ViewBag.KhachHang = khachHang; // nếu cần hiển thị tên/email
+            ViewBag.KhachHang = khachHang;
 
             return View();
         }
 
 
+
+
         public IActionResult CancelOrder()
         {
-            HttpContext.Session.Remove(MySetting.CART_KEY);
+            //HttpContext.Session.Remove(MySetting.CART_KEY);
             TempData["Message"] = "Đã hủy đơn hàng.";
             return RedirectToAction("Index");
         }
