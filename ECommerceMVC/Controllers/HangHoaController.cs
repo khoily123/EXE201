@@ -2,6 +2,8 @@
 using ECommerceMVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
+using System.Drawing.Imaging;
 
 namespace ECommerceMVC.Controllers
 {
@@ -111,7 +113,6 @@ namespace ECommerceMVC.Controllers
             }
 
             data.SoLanXem++;
-            Console.WriteLine(data.SoLanXem);
             _context.SaveChanges();
 
             var result = new ChiTietHangHoaVM
@@ -125,8 +126,20 @@ namespace ECommerceMVC.Controllers
                 TenLoai = data.MaLoaiNavigation.TenLoai,
                 SoLuongTon = 10,
                 DiemDanhGia = 5,
-                SoLuotXem = data.SoLanXem
+                SoLuotXem = data.SoLanXem,
+                ModelUrl = data.ModelUrl ?? string.Empty
             };
+
+            //// ✅ Generate QR code for AR view
+            //var arUrl = Url.Action("ViewAR", "AR", new { id = data.MaHh }, Request.Scheme);
+
+            //using var qrGen = new QRCodeGenerator();
+            //using var qrData = qrGen.CreateQrCode(arUrl, QRCodeGenerator.ECCLevel.Q);
+            //using var qrCode = new QRCode(qrData);
+            //using var bitmap = qrCode.GetGraphic(20);
+            //using var ms = new MemoryStream();
+            //bitmap.Save(ms, ImageFormat.Png);
+            //result.QrCodeBase64 = Convert.ToBase64String(ms.ToArray());
 
             return View(result);
         }

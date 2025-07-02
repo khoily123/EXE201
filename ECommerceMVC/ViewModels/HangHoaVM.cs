@@ -24,6 +24,8 @@
 		public int SoLuongTon { get; set; }
         public int SoLuotXem { get; set; }
 
+		public string ModelUrl { get; set; } // URL to the 3D model file
+
     }
     public class HangHoaPagingVM
     {

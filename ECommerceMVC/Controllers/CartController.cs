@@ -1,18 +1,26 @@
-﻿using ECommerceMVC.Data;
+﻿using Azure.Core;
+using ECommerceMVC.Data;
+using ECommerceMVC.Helpers;
 using ECommerceMVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using ECommerceMVC.Helpers;
+using Microsoft.EntityFrameworkCore;
+using OnlineClothing.Models.MoMo;
 using QRCoder;
 using System.Drawing.Imaging;
-using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using static QRCoder.PayloadGenerator;
 
 namespace ECommerceMVC.Controllers
 {
 	public class CartController : Controller
 	{
 		private readonly Hshop2023Context db;
-
-		public CartController(Hshop2023Context context)
+        private static readonly HttpClient client = new HttpClient();
+        private CollectionLinkRequest _request = new CollectionLinkRequest();
+        public CartController(Hshop2023Context context)
 		{
 			db = context;
 		}
@@ -99,7 +107,7 @@ namespace ECommerceMVC.Controllers
             public int Id { get; set; }
             public int Quantity { get; set; }
         }
-        public IActionResult Checkout()
+        public async Task<IActionResult> CheckoutAsync()
         {
             var khachHang = HttpContext.Session.Get<KhachHang>("KhachHang");
             if (khachHang == null)
@@ -115,25 +123,130 @@ namespace ECommerceMVC.Controllers
                 return RedirectToAction("Index");
             }
 
-            var total = cart.Sum(p => p.ThanhTien); 
+            var total = cart.Sum(p => p.ThanhTien);
 
-            string bankCode = "MB";
-            string accountNumber = "0962698931";
-            string accountName = "Ly Tien Khoi";
-            string content = "Thanh toan don hang " + DateTime.Now.Ticks;
 
-            string qrUrl = $"https://img.vietqr.io/image/{bankCode}-{accountNumber}-compact.png" +
-                           $"?amount={total}&addInfo={Uri.EscapeDataString(content)}&accountName={Uri.EscapeDataString(accountName)}";
+            string accessKey = "F8BBA842ECF85";
+            string secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
 
-            ViewBag.QRCodeUrl = qrUrl;
-            ViewBag.Total = total;
-            ViewBag.Content = content;
-            ViewBag.KhachHang = khachHang;
+            _request.orderId = Guid.NewGuid().ToString();
+            _request.orderInfo = $"Order [{_request.orderId}]";
 
-            return View();
+            //UserVoucher userVoucher = await _context.UserVouchers
+            //    .Where(uv => uv.Status == 1 && uv.EndDate < DateTime.UtcNow)
+            //    .FirstOrDefaultAsync(uv => uv.UserId == Guid.Parse(userId));
+
+            int? discount = 0;
+
+            _request.amount = (long)total;
+            List<MoMoItem> items = new List<MoMoItem>();    
+            foreach (var item in cart)
+            {
+                items.Add(new MoMoItem
+                {
+                    Id = item.MaHh,
+                    Name = item.TenHH,
+                    Price = (long)item.DonGia,
+                    Currency = "VND",
+                    Quantity = item.SoLuong,
+                    TotalPrice = (long)item.ThanhTien
+                });
+            }
+            _request.Items = items;
+            _request.lang = "vi";
+
+            var userInfo = db.KhachHangs.FirstOrDefault(kh => kh.MaKh == khachHang.MaKh);
+
+            _request.UserInfo = new MoMoUserInfo { Name = userInfo.HoTen, PhoneNumber = userInfo.DienThoai, Address = userInfo.DiaChi };
+            _request.partnerCode = "MOMO";
+            _request.redirectUrl = "http://localhost:5222/Payment/Result";
+            _request.ipnUrl = "localhost:8080/Payment/Result";
+            _request.requestId = _request.orderId;
+            _request.requestType = "payWithMethod";
+            _request.extraData = "";
+            _request.storeId = "Online Clothing Shop";
+            _request.autoCapture = true;
+            //_request.amount = 1000;
+
+            var rawSignature = "accessKey=" + accessKey
+                + "&amount=" + _request.amount
+                + "&extraData=" + _request.extraData
+                + "&ipnUrl=" + _request.ipnUrl
+                + "&orderId=" + _request.orderId
+                + "&orderInfo=" + _request.orderInfo
+                + "&partnerCode=" + _request.partnerCode
+                + "&redirectUrl=" + _request.redirectUrl
+                + "&requestId=" + _request.requestId
+                + "&requestType=" + _request.requestType;
+            _request.signature = getSignature(rawSignature, secretKey);
+
+            StringContent httpContent = new StringContent(JsonSerializer.Serialize(_request), System.Text.Encoding.UTF8, "application/json");
+            var quickPayResponse = await client.PostAsync("https://test-payment.momo.vn/v2/gateway/api/create", httpContent);
+            var contentsString = await quickPayResponse.Content.ReadAsStringAsync();
+
+            //Console.WriteLine("-----------------------------------------------------------------");
+            //Console.WriteLine(contentsString);
+            //Console.WriteLine("-----------------------------------------------------------------");
+
+            var response = JsonSerializer.Deserialize<PaymentResult>(contentsString);
+
+            if (response == null || string.IsNullOrEmpty(response.PayUrl))
+            {
+                TempData["error"] = "Không thể tạo link thanh toán";
+                return RedirectToAction("Index"); // or return a View if you prefer
+            }
+
+            // Nếu có PayUrl, tạo đơn hàng và chi tiết
+            HoaDon order = new()
+            {
+                MaKh = khachHang.MaKh,
+                NgayDat = DateTime.Now,
+                HoTen = _request.UserInfo.Name,
+                DiaChi = _request.UserInfo.Address,
+                CachThanhToan = "Online",
+                CachVanChuyen = "Standard",
+                PhiVanChuyen = 0,
+                MaTrangThai = 1,
+                GhiChu = "Thanh toán qua MoMo - ",
+            };
+
+            await db.HoaDons.AddAsync(order);
+
+            // create order details
+            //foreach (CartItem cd in Cart)
+            //{
+            //    var hangHoa = db.HangHoas.FirstOrDefault(h => h.MaHh == cd.MaHh);
+            //    VChiTietHoaDon ct = new()
+            //    {
+            //        MaHd = order.MaHd,
+            //        MaHh = cd.MaHh,
+            //        DonGia = cd.DonGia,
+            //        SoLuong = cd.SoLuong,
+            //        GiamGia = 0,
+            //        TenHh = hangHoa?.TenHh ?? "unknown"
+            //    };
+
+            //    await db.VChiTietHoaDons.AddAsync(ct);
+            //}
+
+            await db.SaveChangesAsync();
+
+            return Redirect(response.PayUrl!);
+
         }
 
+        private static string getSignature(string text, string key)
+        {
+            UTF8Encoding encoding = new UTF8Encoding();
 
+            byte[] textBytes = encoding.GetBytes(text);
+            byte[] keyBytes = encoding.GetBytes(key);
+
+            using HMACSHA256 hash = new HMACSHA256(keyBytes);
+            byte[] hashBytes = hash.ComputeHash(textBytes);
+
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        }
 
 
         public IActionResult CancelOrder()

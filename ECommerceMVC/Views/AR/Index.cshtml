@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>three.js - GLB Viewer with ImportMap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+
+    <!-- Import map must be before the module script -->
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://s3.cloudfly.vn/jsm/jsm/three.module.js",
+            "three/examples/jsm/": "https://s3.cloudfly.vn/jsm/jsm/"
+          }
+        }
+    </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+        // Scene
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xeeeeee);
+
+        // Camera
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 1.5, 3);
+
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Lights
+        const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
+        light.position.set(0, 1, 0);
+        scene.add(light);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(3, 10, 5);
+        scene.add(directionalLight);
+
+        // Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, 1, 0);
+        controls.update();
+
+        // Load the GLB model
+        const loader = new GLTFLoader();
+        loader.load(
+          'https://s3.cloudfly.vn/models/chair.glb',
+          gltf => {
+            const model = gltf.scene;
+            model.scale.set(1, 1, 1);
+            scene.add(model);
+            console.log('Model loaded.');
+          },
+          xhr => {
+            console.log(`Loading: ${(xhr.loaded / xhr.total * 100).toFixed(2)}%`);
+          },
+          error => {
+            console.error('Error loading model:', error);
+          }
+        );
+
+        // Resize
+        window.addEventListener('resize', () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Animate
+        function animate() {
+          requestAnimationFrame(animate);
+          renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>
